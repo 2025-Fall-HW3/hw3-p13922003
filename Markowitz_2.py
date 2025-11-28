@@ -70,8 +70,25 @@ class MyPortfolio:
         """
         TODO: Complete Task 4 Below
         """
-        
-        
+        for date in range(len(self.price.index)):
+            if (date - self.lookback)% self.lookback == 0 and date >= self.lookback:
+                weights = pd.Series(0.0, index=self.price.columns)
+                end_loc = date
+                start_loc = end_loc - self.lookback
+            
+                lookback_data = self.returns.iloc[start_loc:end_loc, assets.get_indexer(assets)+1]
+                cumulative_returns = lookback_data[assets].sum()
+            
+                top_assets = cumulative_returns.nlargest(3)
+                if top_assets.min() > 0:
+                    top_assets_index = top_assets.index
+                    for asset in top_assets_index:
+                        weights[asset] = 1/3
+                else:
+                    pass
+                    
+                self.portfolio_weights.iloc[start_loc:end_loc] = weights
+
         """
         TODO: Complete Task 4 Above
         """
